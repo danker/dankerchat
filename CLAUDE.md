@@ -6,11 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a specification-driven development framework that enforces strict Test-Driven Development (TDD) practices. Features are developed in numbered branches (e.g., `001-feature-name`) with comprehensive documentation before any implementation.
 
-**Current Feature**: Chat Application (branch: `001-chat-application`)  
-- Multi-interface chat: Web, CLI, and REST API
-- Real-time messaging with WebSocket support
-- Libraries: Flask, SQLAlchemy, Flask-SocketIO, React, Click
-- Architecture: Frontend + Backend + CLI client structure
+**Current Features**:
+- **Chat Application** (branch: `001-chat-application`): Multi-interface chat with Web, CLI, and REST API
+- **UV Migration** (branch: `002-make-changes-to`): Package management migration from venv to uv
+
+**Package Management**: Uses UV instead of venv/pip for faster, more reliable dependency management  
+**Libraries**: Flask, SQLAlchemy, Flask-SocketIO, React, Click  
+**Architecture**: Frontend + Backend + CLI client structure
 
 ## Key Commands
 
@@ -41,6 +43,40 @@ This is a specification-driven development framework that enforces strict Test-D
 ### Script Options
 - All scripts support `--json` flag for JSON output
 - Use `--help` or `-h` for usage information
+
+### Python Environment Commands
+
+**UV Package Management** (preferred):
+```bash
+# Setup environment and dependencies
+uv sync
+
+# Run Python commands
+uv run python app.py
+uv run pytest
+uv run flask run
+
+# Add/remove packages  
+uv add package-name
+uv remove package-name
+
+# Interactive shell
+uv shell
+
+# Update all dependencies
+uv sync --upgrade
+```
+
+**Traditional Commands** (for reference):
+```bash
+# Create and activate venv (deprecated)
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+
+# Install dependencies (deprecated)
+pip install -r requirements.txt
+```
 
 ## Project Structure
 
@@ -123,3 +159,4 @@ Before any implementation:
 - Adding unnecessary abstraction layers
 - Creating files outside the structured workflow
 - Implementing features directly without library structure
+- ALWAYS use gh command for any git or github commands
