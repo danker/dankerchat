@@ -1,0 +1,194 @@
+[project]
+name = "dankerchat"
+version = "0.1.0"
+description = "Multi-interface chat application with Flask backend and real-time messaging"
+authors = [
+    {name = "DankerChat Team", email = "team@dankerchat.dev"}
+]
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Framework :: Flask",
+    "Topic :: Communications :: Chat",
+]
+
+dependencies = [
+    "flask>=2.3.0",
+    "sqlalchemy>=2.0.0",
+    "flask-socketio>=5.3.0",
+    "flask-sqlalchemy>=3.0.0",
+    "flask-jwt-extended>=4.5.0",
+    "flask-cors>=4.0.0",
+    "redis>=4.5.0",
+    "bcrypt>=4.0.0",
+    "python-dotenv>=1.0.0",
+    "click>=8.1.0",
+    "requests>=2.31.0",
+    "websocket-client>=1.6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.4.0",
+    "pytest-flask>=1.2.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "black>=23.7.0",
+    "ruff>=0.0.280",
+    "mypy>=1.5.0",
+    "pre-commit>=3.3.0",
+    "tomli>=2.0.1",
+]
+postgres = [
+    "psycopg2-binary>=2.9.0",
+]
+production = [
+    "gunicorn>=21.2.0",
+    "gevent>=23.7.0",
+]
+
+[project.scripts]
+dankerchat-server = "dankerchat.server:cli"
+dankerchat-cli = "dankerchat.client.cli:main"
+dankerchat-admin = "dankerchat.admin:cli"
+
+[project.urls]
+Homepage = "https://github.com/edanker/dankerchat"
+Repository = "https://github.com/edanker/dankerchat"
+Issues = "https://github.com/edanker/dankerchat/issues"
+Documentation = "https://github.com/edanker/dankerchat/blob/main/README.md"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/dankerchat"]
+
+[tool.uv]
+dev-dependencies = [
+    "pytest>=7.4.0",
+    "pytest-flask>=1.2.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.1.0",
+    "ruff>=0.0.280",
+    "mypy>=1.5.0",
+    "pre-commit>=3.3.0",
+    "tomli>=2.0.1",
+]
+
+[tool.uv.sources]
+# Use PyPI for all dependencies (default behavior)
+
+[tool.black]
+line-length = 88
+target-version = ['py311']
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+  # directories
+  \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+target-version = "py311"
+line-length = 88
+select = [
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "C4", # flake8-comprehensions
+    "UP", # pyupgrade
+]
+ignore = [
+    "E501",  # line too long, handled by black
+    "B008",  # do not perform function calls in argument defaults
+    "C901",  # too complex
+]
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401"]
+
+[tool.mypy]
+python_version = "3.11"
+check_untyped_defs = true
+disallow_any_generics = true
+disallow_incomplete_defs = true
+disallow_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+warn_return_any = true
+strict_optional = true
+
+[[tool.mypy.overrides]]
+module = [
+    "flask_socketio.*",
+    "redis.*",
+    "bcrypt.*",
+]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py", "*_test.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--strict-markers",
+    "--strict-config", 
+    "--verbose",
+    "--tb=short",
+    "--cov=dankerchat",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--cov-report=xml",
+]
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "integration: marks tests as integration tests",
+    "unit: marks tests as unit tests",
+    "api: marks tests as API tests",
+    "websocket: marks tests as WebSocket tests",
+]
+
+[tool.coverage.run]
+source = ["dankerchat"]
+omit = [
+    "*/tests/*",
+    "*/migrations/*",
+    "*/venv/*",
+    "*/.venv/*",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "if self.debug:",
+    "if settings.DEBUG",
+    "raise AssertionError",
+    "raise NotImplementedError", 
+    "if 0:",
+    "if __name__ == .__main__.:",
+    "class .*\\bProtocol\\):",
+    "@(abc\\.)?abstractmethod",
+]

@@ -45,7 +45,8 @@ def test_flask_socketio_available():
     """Test that Flask-SocketIO is installed and importable"""
     try:
         import flask_socketio
-        print(f"✅ Flask-SocketIO available: {flask_socketio.__version__}")
+        version = getattr(flask_socketio, '__version__', 'installed')
+        print(f"✅ Flask-SocketIO available: {version}")
         return True
     except ImportError:
         print("❌ Flask-SocketIO not installed")
