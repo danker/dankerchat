@@ -6,11 +6,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 This is a specification-driven development framework that enforces strict Test-Driven Development (TDD) practices. Features are developed in numbered branches (e.g., `001-feature-name`) with comprehensive documentation before any implementation.
 
-**Current Feature**: Chat Application (branch: `001-chat-application`)  
-- Multi-interface chat: Web, CLI, and REST API
-- Real-time messaging with WebSocket support
-- Libraries: Flask, SQLAlchemy, Flask-SocketIO, React, Click
-- Architecture: Frontend + Backend + CLI client structure
+**Current Features**:
+- **Chat Application** (branch: `001-chat-application`): Multi-interface chat with Web, CLI, and REST API
+- **UV Migration** (branch: `002-uv-migration`): Package management migration from venv to uv
+
+**Package Management**: Uses UV instead of venv/pip for faster, more reliable dependency management  
+**Libraries**: Flask, SQLAlchemy, Flask-SocketIO, React, Click  
+**Architecture**: Frontend + Backend + CLI client structure
 
 ## Key Commands
 
