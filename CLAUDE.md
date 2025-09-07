@@ -8,7 +8,7 @@ This is a specification-driven development framework that enforces strict Test-D
 
 **Current Features**:
 - **Chat Application** (branch: `001-chat-application`): Multi-interface chat with Web, CLI, and REST API
-- **UV Migration** (branch: `002-make-changes-to`): Package management migration from venv to uv
+- **UV Migration** (branch: `002-uv-migration`): Package management migration from venv to uv
 
 **Package Management**: Uses UV instead of venv/pip for faster, more reliable dependency management  
 **Libraries**: Flask, SQLAlchemy, Flask-SocketIO, React, Click  
