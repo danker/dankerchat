@@ -1,0 +1,18 @@
+# Backup of dependency requirements before UV migration
+# Date: 2025-09-07
+# Status: No existing requirements.txt files found in project
+# 
+# This is a placeholder backup file created as part of Task T001
+# The project is currently in specification phase with no implemented dependencies yet
+#
+# Expected dependencies based on specs/001-chat-application/plan.md:
+# flask>=2.3.0
+# sqlalchemy>=2.0.0  
+# flask-socketio>=5.3.0
+# redis>=4.0.0
+# pyjwt>=2.8.0
+# click>=8.1.0
+# pytest>=7.4.0
+# pytest-flask>=1.2.0
+#
+# Note: These dependencies will be properly defined in pyproject.toml during UV migration
