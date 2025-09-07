@@ -1,0 +1,349 @@
+# WebSocket Event Specifications
+# Chat Application Real-time Events
+
+## Client → Server Events
+
+### connect
+**Description**: Client connects to WebSocket server  
+**Authentication**: JWT token in auth header or query parameter
+**Payload**: None
+**Response**: 
+- `connect_ack` with user session info
+- `error` if authentication fails
+
+### disconnect  
+**Description**: Client disconnects from WebSocket server
+**Payload**: None
+**Response**: None (connection closed)
+
+### join_channel
+**Description**: Join a channel room for real-time updates
+**Payload**:
+```json
+{
+  "channel_id": "uuid",
+  "last_message_timestamp": "2025-09-07T10:30:00Z"  // optional
+}
+```
+**Response**:
+- `channel_joined` with channel info and recent messages
+- `error` if channel not found or no permission
+
+### leave_channel
+**Description**: Leave a channel room  
+**Payload**:
+```json
+{
+  "channel_id": "uuid"
+}
+```
+**Response**: `channel_left` confirmation
+
+### send_message
+**Description**: Send message to channel or user
+**Payload**:
+```json
+{
+  "type": "channel" | "direct",
+  "target_id": "uuid",  // channel_id or user_id
+  "content": "string",
+  "temp_id": "string"   // client-generated temp ID for acknowledgment
+}
+```
+**Response**: 
+- `message_ack` with server message ID and temp_id
+- `error` if sending failed
+
+### start_typing
+**Description**: Indicate user is typing
+**Payload**:
+```json
+{
+  "type": "channel" | "direct", 
+  "target_id": "uuid"
+}
+```
+**Response**: None (broadcasts to other clients)
+
+### stop_typing
+**Description**: Indicate user stopped typing
+**Payload**:
+```json
+{
+  "type": "channel" | "direct",
+  "target_id": "uuid" 
+}
+```
+**Response**: None (broadcasts to other clients)
+
+### mark_read
+**Description**: Mark messages as read
+**Payload**:
+```json
+{
+  "type": "channel" | "direct",
+  "target_id": "uuid",
+  "message_id": "uuid"  // last read message
+}
+```
+**Response**: `read_receipt` confirmation
+
+## Server → Client Events
+
+### connect_ack
+**Description**: Connection established successfully
+**Payload**:
+```json
+{
+  "user": {
+    "id": "uuid",
+    "username": "string", 
+    "display_name": "string",
+    "role": "string"
+  },
+  "session_id": "uuid"
+}
+```
+
+### message_received  
+**Description**: New message received in channel or direct conversation
+**Payload**:
+```json
+{
+  "message": {
+    "id": "uuid",
+    "content": "string", 
+    "sender": {
+      "id": "uuid",
+      "username": "string",
+      "display_name": "string"
+    },
+    "type": "channel" | "direct",
+    "target_id": "uuid",
+    "created_at": "2025-09-07T10:30:00Z",
+    "message_type": "text" | "system" | "join" | "leave"
+  }
+}
+```
+
+### message_ack
+**Description**: Acknowledgment that sent message was received by server
+**Payload**:
+```json
+{
+  "temp_id": "string",    // client temp ID
+  "message_id": "uuid",   // server-assigned ID
+  "timestamp": "2025-09-07T10:30:00Z"
+}
+```
+
+### channel_joined
+**Description**: Successfully joined channel room
+**Payload**:
+```json
+{
+  "channel": {
+    "id": "uuid",
+    "name": "string",
+    "display_name": "string", 
+    "member_count": "integer"
+  },
+  "recent_messages": [
+    // Array of message objects (last 20)
+  ],
+  "members_online": [
+    {
+      "id": "uuid",
+      "username": "string",
+      "display_name": "string"
+    }
+  ]
+}
+```
+
+### channel_left
+**Description**: Successfully left channel room  
+**Payload**:
+```json
+{
+  "channel_id": "uuid"
+}
+```
+
+### user_joined_channel
+**Description**: Another user joined the channel
+**Payload**:
+```json
+{
+  "channel_id": "uuid",
+  "user": {
+    "id": "uuid", 
+    "username": "string",
+    "display_name": "string"
+  },
+  "joined_at": "2025-09-07T10:30:00Z"
+}
+```
+
+### user_left_channel  
+**Description**: Another user left the channel
+**Payload**:
+```json
+{
+  "channel_id": "uuid",
+  "user": {
+    "id": "uuid",
+    "username": "string", 
+    "display_name": "string"
+  },
+  "left_at": "2025-09-07T10:30:00Z"
+}
+```
+
+### user_typing
+**Description**: Another user started typing
+**Payload**:
+```json
+{
+  "type": "channel" | "direct",
+  "target_id": "uuid",
+  "user": {
+    "id": "uuid",
+    "username": "string",
+    "display_name": "string"
+  }
+}
+```
+
+### user_stopped_typing
+**Description**: Another user stopped typing  
+**Payload**:
+```json
+{
+  "type": "channel" | "direct", 
+  "target_id": "uuid",
+  "user": {
+    "id": "uuid",
+    "username": "string",
+    "display_name": "string"
+  }
+}
+```
+
+### user_online
+**Description**: User came online
+**Payload**:
+```json
+{
+  "user": {
+    "id": "uuid",
+    "username": "string",
+    "display_name": "string"
+  },
+  "timestamp": "2025-09-07T10:30:00Z"
+}
+```
+
+### user_offline
+**Description**: User went offline
+**Payload**:
+```json
+{
+  "user": {
+    "id": "uuid",
+    "username": "string", 
+    "display_name": "string"
+  },
+  "timestamp": "2025-09-07T10:30:00Z"
+}
+```
+
+### read_receipt
+**Description**: Confirmation that messages were marked as read
+**Payload**:
+```json
+{
+  "type": "channel" | "direct",
+  "target_id": "uuid", 
+  "message_id": "uuid",
+  "read_at": "2025-09-07T10:30:00Z"
+}
+```
+
+### channel_updated
+**Description**: Channel settings were modified
+**Payload**:
+```json
+{
+  "channel": {
+    "id": "uuid",
+    "name": "string",
+    "display_name": "string",
+    "description": "string",
+    "is_archived": "boolean"
+  },
+  "updated_by": {
+    "id": "uuid", 
+    "username": "string",
+    "display_name": "string"
+  },
+  "updated_at": "2025-09-07T10:30:00Z"
+}
+```
+
+### message_deleted
+**Description**: Message was deleted by user or moderator
+**Payload**:
+```json
+{
+  "message_id": "uuid",
+  "type": "channel" | "direct",
+  "target_id": "uuid",
+  "deleted_by": {
+    "id": "uuid",
+    "username": "string",
+    "display_name": "string"  
+  },
+  "deleted_at": "2025-09-07T10:30:00Z"
+}
+```
+
+### error
+**Description**: Error occurred during WebSocket operation
+**Payload**:
+```json
+{
+  "code": "string",     // Error code (e.g., "AUTH_FAILED", "CHANNEL_NOT_FOUND")
+  "message": "string",  // Human-readable error message
+  "details": "object",  // Additional error context
+  "request_id": "string" // Optional: reference to failed request
+}
+```
+
+## Connection States
+
+### Authentication
+- Client connects with JWT token in Authorization header or `token` query parameter
+- Server validates token and establishes authenticated session
+- Invalid/expired tokens result in `error` event and connection termination
+
+### Room Management
+- Clients must explicitly `join_channel` to receive channel events
+- Server maintains room membership per WebSocket connection
+- Disconnection automatically removes client from all rooms
+
+### Message Delivery Guarantees
+- Client messages receive `message_ack` when successfully processed
+- Temporary client IDs allow matching acknowledgments to sent messages
+- Failed message sends trigger `error` events with failure reason
+
+### Reconnection Handling
+- Clients should reconnect on connection loss
+- Include `last_message_timestamp` in `join_channel` to get missed messages
+- Server queues messages for brief periods during disconnections
+
+## Rate Limiting
+- Maximum 10 messages per minute per user
+- Maximum 5 channel joins per minute per user  
+- Typing indicators limited to once per 3 seconds
+- Rate limit exceeded triggers `error` event with retry delay
