@@ -44,6 +44,40 @@ This is a specification-driven development framework that enforces strict Test-D
 - All scripts support `--json` flag for JSON output
 - Use `--help` or `-h` for usage information
 
+### Python Environment Commands
+
+**UV Package Management** (preferred):
+```bash
+# Setup environment and dependencies
+uv sync
+
+# Run Python commands
+uv run python app.py
+uv run pytest
+uv run flask run
+
+# Add/remove packages  
+uv add package-name
+uv remove package-name
+
+# Interactive shell
+uv shell
+
+# Update all dependencies
+uv sync --upgrade
+```
+
+**Traditional Commands** (for reference):
+```bash
+# Create and activate venv (deprecated)
+python -m venv venv
+source venv/bin/activate  # Linux/macOS
+venv\Scripts\activate     # Windows
+
+# Install dependencies (deprecated)
+pip install -r requirements.txt
+```
+
 ## Project Structure
 
 ### Feature Documentation
@@ -125,3 +159,4 @@ Before any implementation:
 - Adding unnecessary abstraction layers
 - Creating files outside the structured workflow
 - Implementing features directly without library structure
+- ALWAYS use gh command for any git or github commands
