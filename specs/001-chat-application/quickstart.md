@@ -7,27 +7,29 @@ This guide walks through setting up and using the chat application across all in
 
 ## Prerequisites
 
-- Python 3.11+
-- Node.js 18+
-- Redis 7.0+
-- SQLite (development) or PostgreSQL (production)
+- **UV Package Manager** (recommended) - [Install UV](https://docs.astral.sh/uv/getting-started/installation/)
+- **Python 3.11+** (automatically managed by UV)
+- **Node.js 18+** (for frontend development)
+- **Redis 7.0+** (for real-time messaging and sessions)
+- **SQLite** (development) or **PostgreSQL** (production)
 
 ## Installation & Setup
 
-### 1. Backend Setup
+### 1. Backend Setup (UV - Recommended)
 
 ```bash
 # Clone and enter repository
 git clone <repository-url>
 cd dankerchat
 
-# Create Python virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+# Install UV if not already installed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# Install backend dependencies
-cd backend
-pip install -r requirements.txt
+# One-command setup (creates .venv, installs all dependencies)
+uv sync
+
+# Setup environment variables
+./scripts/env-setup.sh setup
 
 # Set environment variables
 export FLASK_ENV=development
@@ -35,19 +37,19 @@ export DATABASE_URL=sqlite:///chat.db
 export REDIS_URL=redis://localhost:6379/0
 export JWT_SECRET_KEY=your-secret-key-here
 
-# Initialize database
-flask db init
-flask db migrate -m "Initial migration"
-flask db upgrade
+# Initialize database (when implemented)
+uv run flask db init
+uv run flask db migrate -m "Initial migration"
+uv run flask db upgrade
 
-# Create default admin user
-flask create-admin admin admin123
+# Create default admin user (when implemented)
+uv run flask create-admin admin admin123
 
 # Start Redis server (separate terminal)
 redis-server
 
-# Start backend server
-python app.py
+# Start backend server (when implemented)
+uv run python app.py
 ```
 
 Backend will be running at `http://localhost:5000`
@@ -74,12 +76,29 @@ Frontend will be available at `http://localhost:3000`
 ### 3. CLI Client Setup
 
 ```bash
-# Install CLI globally (from backend directory)
-pip install -e .
+# CLI is automatically available with UV environment
+uv run dankerchat-cli --help  # When implemented
 
-# Or use directly
-python -m chat_cli --help
+# Or use directly with UV
+uv run python -m dankerchat.client.cli --help  # When implemented
 ```
+
+#### Alternative Setup (Traditional Python)
+<details>
+<summary>Click to expand legacy setup instructions</summary>
+
+```bash
+# Create Python virtual environment  
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt  # When available
+
+# Install CLI  
+pip install -e .
+```
+</details>
 
 ## Usage Examples
 
