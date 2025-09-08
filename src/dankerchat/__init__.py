@@ -8,7 +8,9 @@ real-time messaging via WebSocket, user authentication, and admin functionality.
 __version__ = "0.1.0"
 __author__ = "DankerChat Team"
 __email__ = "team@dankerchat.dev"
-__description__ = "Multi-interface chat application with Flask backend and real-time messaging"
+__description__ = (
+    "Multi-interface chat application with Flask backend and real-time messaging"
+)
 
 # Import main components for easy access
 try:

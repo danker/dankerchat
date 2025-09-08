@@ -95,8 +95,16 @@ def test_venv_pip_available():
     # Instead, verify that UV can manage packages in this environment
     try:
         result = subprocess.run(
-            ["uv", "run", "python", "-c", "import sys; print('Package management via UV')"],
-            capture_output=True, text=True, check=True
+            [
+                "uv",
+                "run",
+                "python",
+                "-c",
+                "import sys; print('Package management via UV')",
+            ],
+            capture_output=True,
+            text=True,
+            check=True,
         )
         if "Package management via UV" in result.stdout:
             print("✅ UV package management available (pip not needed)")
