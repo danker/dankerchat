@@ -1,7 +1,7 @@
 """
 DankerChat - Multi-interface chat application with Flask backend and real-time messaging.
 
-A modern chat application supporting web, CLI, and REST API interfaces with 
+A modern chat application supporting web, CLI, and REST API interfaces with
 real-time messaging via WebSocket, user authentication, and admin functionality.
 """
 
@@ -12,8 +12,8 @@ __description__ = "Multi-interface chat application with Flask backend and real-
 
 # Import main components for easy access
 try:
-    from .server import create_app
     from .client import DankerChatClient
+    from .server import create_app
 except ImportError:
     # Modules not yet implemented - this is expected during initial setup
     pass

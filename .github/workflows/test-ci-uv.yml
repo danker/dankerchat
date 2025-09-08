@@ -1,0 +1,54 @@
+name: Test UV CI Pipeline
+
+on:
+  workflow_dispatch:  # Manual trigger only for testing
+  push:
+    paths:
+      - '.github/workflows/test-ci-uv.yml'  # Only trigger on changes to this file
+
+jobs:
+  test-uv-basic:
+    name: Basic UV Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up UV
+      uses: astral-sh/setup-uv@v3
+      with:
+        version: "latest"
+        
+    - name: Verify UV installation
+      run: |
+        uv --version
+        echo "UV installed successfully"
+        
+    - name: Install project dependencies
+      run: |
+        echo "Testing UV sync..."
+        uv sync --dev
+        echo "Dependencies installed successfully"
+        
+    - name: Verify Python environment
+      run: |
+        echo "Testing Python environment..."
+        uv run python --version
+        uv run python -c "import sys; print(f'Python path: {sys.executable}')"
+        
+    - name: Test project imports
+      run: |
+        echo "Testing project imports..."
+        uv run python -c "import dankerchat; print(f'DankerChat {dankerchat.__version__} imported successfully')"
+        
+    - name: Run basic verification test
+      run: |
+        echo "Running basic verification..."
+        uv run python tests/test_pyproject_creation.py
+        
+    - name: Test development scripts
+      run: |
+        echo "Testing development scripts..."
+        ./scripts/uv-helpers.sh status
+        ./scripts/dev-commands.sh --help
