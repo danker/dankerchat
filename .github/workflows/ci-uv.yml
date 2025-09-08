@@ -82,9 +82,6 @@ jobs:
     - name: Run ruff formatting check
       run: uv run ruff format --check src/ tests/
       
-    - name: Run black formatting check
-      run: uv run black --check src/ tests/
-      
     - name: Run type checking with mypy
       run: uv run mypy src/dankerchat
       continue-on-error: true  # Don't fail CI on type errors during development
