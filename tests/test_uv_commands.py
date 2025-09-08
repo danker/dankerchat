@@ -8,30 +8,31 @@ Expected State: FAIL - UV project commands should not work yet (no pyproject.tom
 Target: After UV migration complete, this test should PASS
 """
 
-import sys
 import subprocess
-import os
+import sys
 from pathlib import Path
+
 
 def get_project_root():
     """Get the project root directory"""
     current = Path(__file__).parent
     while current != current.parent:
-        if (current / '.git').exists():
+        if (current / ".git").exists():
             return current
         current = current.parent
     return Path.cwd()
+
 
 def run_uv_command(cmd_args, expect_success=True):
     """Helper to run UV commands and capture output"""
     project_root = get_project_root()
     try:
         result = subprocess.run(
-            ['uv'] + cmd_args,
+            ["uv"] + cmd_args,
             capture_output=True,
             text=True,
             cwd=str(project_root),
-            timeout=30
+            timeout=30,
         )
         return result
     except subprocess.TimeoutExpired:
@@ -41,13 +42,14 @@ def run_uv_command(cmd_args, expect_success=True):
         print("❌ UV command not found")
         return None
 
+
 def test_uv_sync():
     """Test that 'uv sync' works to install dependencies"""
-    result = run_uv_command(['sync'])
-    
+    result = run_uv_command(["sync"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
         print("✅ 'uv sync' completed successfully")
         return True
@@ -55,14 +57,15 @@ def test_uv_sync():
         print(f"❌ 'uv sync' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_add():
     """Test that 'uv add' works to add new dependencies"""
     # Try to add a simple test dependency
-    result = run_uv_command(['add', '--dev', 'black'])
-    
+    result = run_uv_command(["add", "--dev", "black"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
         print("✅ 'uv add' works for development dependencies")
         return True
@@ -70,64 +73,68 @@ def test_uv_add():
         print(f"❌ 'uv add' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_remove():
     """Test that 'uv remove' works to remove dependencies"""
     # This may fail if black wasn't added, which is expected
-    result = run_uv_command(['remove', '--dev', 'black'])
-    
+    result = run_uv_command(["remove", "--dev", "black"])
+
     if result is None:
         return False
-        
+
     # Either success or "not found" is acceptable for this test
-    if result.returncode == 0 or 'not found' in result.stderr.lower():
+    if result.returncode == 0 or "not found" in result.stderr.lower():
         print("✅ 'uv remove' command functional")
         return True
     else:
         print(f"❌ 'uv remove' failed unexpectedly: {result.stderr.strip()}")
         return False
 
+
 def test_uv_run():
     """Test that 'uv run' works to execute Python commands"""
-    result = run_uv_command(['run', 'python', '-c', 'print("Hello from UV")'])
-    
+    result = run_uv_command(["run", "python", "-c", 'print("Hello from UV")'])
+
     if result is None:
         return False
-        
-    if result.returncode == 0 and 'Hello from UV' in result.stdout:
+
+    if result.returncode == 0 and "Hello from UV" in result.stdout:
         print("✅ 'uv run' executes Python commands")
         return True
     else:
         print(f"❌ 'uv run' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_shell():
     """Test that 'uv shell' information is available"""
     # We can't test interactive shell, but we can check if command exists
-    result = run_uv_command(['help', 'shell'])
-    
+    result = run_uv_command(["help", "shell"])
+
     if result is None:
         return False
-        
-    if result.returncode == 0 and 'shell' in result.stdout.lower():
+
+    if result.returncode == 0 and "shell" in result.stdout.lower():
         print("✅ 'uv shell' command available")
         return True
     else:
         print("❌ 'uv shell' command not available")
         return False
 
+
 def test_uv_lock():
     """Test that 'uv lock' works to update dependency lockfile"""
-    result = run_uv_command(['lock'])
-    
+    result = run_uv_command(["lock"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
         print("✅ 'uv lock' completed successfully")
-        
+
         # Check if uv.lock was created
         project_root = get_project_root()
-        if (project_root / 'uv.lock').exists():
+        if (project_root / "uv.lock").exists():
             print("✅ uv.lock file created")
             return True
         else:
@@ -137,13 +144,14 @@ def test_uv_lock():
         print(f"❌ 'uv lock' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_tree():
     """Test that 'uv tree' shows dependency tree"""
-    result = run_uv_command(['tree'])
-    
+    result = run_uv_command(["tree"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
         print("✅ 'uv tree' shows dependency information")
         return True
@@ -151,17 +159,18 @@ def test_uv_tree():
         print(f"❌ 'uv tree' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_pip_list():
     """Test that 'uv pip list' shows installed packages"""
-    result = run_uv_command(['pip', 'list'])
-    
+    result = run_uv_command(["pip", "list"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
-        lines = result.stdout.strip().split('\n')
+        lines = result.stdout.strip().split("\n")
         if len(lines) >= 2:  # Header + at least one package
-            print(f"✅ 'uv pip list' shows {len(lines)-1} packages")
+            print(f"✅ 'uv pip list' shows {len(lines) - 1} packages")
             return True
         else:
             print("❌ 'uv pip list' shows no packages")
@@ -170,31 +179,33 @@ def test_uv_pip_list():
         print(f"❌ 'uv pip list' failed: {result.stderr.strip()}")
         return False
 
+
 def test_uv_pip_check():
     """Test that 'uv pip check' validates dependencies"""
-    result = run_uv_command(['pip', 'check'])
-    
+    result = run_uv_command(["pip", "check"])
+
     if result is None:
         return False
-        
+
     if result.returncode == 0:
         print("✅ 'uv pip check' found no dependency conflicts")
         return True
     else:
         # Some conflicts might be expected during migration
-        if 'conflict' in result.stderr.lower():
+        if "conflict" in result.stderr.lower():
             print("⚠️  'uv pip check' found conflicts (may be expected)")
             return True
         else:
             print(f"❌ 'uv pip check' failed: {result.stderr.strip()}")
             return False
 
+
 def run_all_tests():
     """Run all UV command integration tests"""
     print("=== UV Commands Integration Verification Tests (T009) ===")
     print("EXPECTED STATE: FAIL (no pyproject.toml for UV project commands)")
     print("")
-    
+
     tests = [
         ("uv sync", test_uv_sync),
         ("uv add", test_uv_add),
@@ -204,26 +215,27 @@ def run_all_tests():
         ("uv lock", test_uv_lock),
         ("uv tree", test_uv_tree),
         ("uv pip list", test_uv_pip_list),
-        ("uv pip check", test_uv_pip_check)
+        ("uv pip check", test_uv_pip_check),
     ]
-    
+
     passed = 0
     total = len(tests)
-    
+
     for test_name, test_func in tests:
         print(f"Running: {test_name}")
         if test_func():
             passed += 1
         print("")
-    
+
     print(f"Results: {passed}/{total} tests passed")
-    
+
     if passed == total:
         print("🎉 ALL TESTS PASSED - UV commands fully integrated")
         return True
     else:
         print(f"❌ {total - passed} tests failed - UV project integration incomplete")
         return False
+
 
 if __name__ == "__main__":
     success = run_all_tests()
