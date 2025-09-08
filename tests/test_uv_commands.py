@@ -194,8 +194,13 @@ def test_uv_pip_check():
     else:
         # Some conflicts might be expected during migration or in CI
         stderr_lower = result.stderr.lower()
-        if any(keyword in stderr_lower for keyword in ["conflict", "userpath", "pipx", "system", "incompatible"]):
-            print("⚠️  'uv pip check' found conflicts (expected in CI/system environment)")
+        if any(
+            keyword in stderr_lower
+            for keyword in ["conflict", "userpath", "pipx", "system", "incompatible"]
+        ):
+            print(
+                "⚠️  'uv pip check' found conflicts (expected in CI/system environment)"
+            )
             return True
         else:
             print(f"❌ 'uv pip check' failed: {result.stderr.strip()}")
