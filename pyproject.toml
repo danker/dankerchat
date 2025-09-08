@@ -1,6 +1,6 @@
 [project]
 name = "dankerchat"
-version = "0.1.0"
+version = "0.1.1"
 description = "Multi-interface chat application with Flask backend and real-time messaging"
 authors = [
     {name = "DankerChat Team", email = "team@dankerchat.dev"}
