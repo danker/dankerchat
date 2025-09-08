@@ -125,7 +125,7 @@ def test_uv_pip_list():
     try:
         # Test key package imports
         result = subprocess.run(
-            ["uv", "run", "python", "-c", 
+            ["uv", "run", "python", "-c",
              "import flask, sqlalchemy, flask_socketio; print('Core packages available')"],
             capture_output=True, text=True, check=True
         )
