@@ -2,7 +2,7 @@
 
 **Project**: DankerChat  
 **Benchmark Date**: 2025-09-08  
-**Test Environment**: macOS (Darwin 24.6.0), Python 3.13.5  
+**Test Environment**: macOS (Darwin 24.6.0), Python 3.12.10  
 **UV Version**: Latest stable  
 
 ## 📊 Executive Summary
@@ -264,7 +264,7 @@ time (
 ### Test Environment
 - **Hardware**: MacBook Pro (M1/M2 equivalent performance)
 - **OS**: macOS (Darwin 24.6.0) 
-- **Python**: 3.13.5 (via Homebrew)
+- **Python**: 3.12.10 (via UV)
 - **Internet**: Stable broadband connection
 - **Disk**: SSD storage
 
