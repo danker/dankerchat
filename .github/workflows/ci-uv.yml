@@ -57,7 +57,7 @@ jobs:
       
     - name: Upload coverage reports
       uses: codecov/codecov-action@v4
-      if: matrix.python-version == '3.12'
+      if: matrix.python-version == '3.11'
       with:
         file: ./coverage.xml
         fail_ci_if_error: false
@@ -72,6 +72,9 @@ jobs:
       
     - name: Set up UV
       uses: astral-sh/setup-uv@v3
+      
+    - name: Set up Python 3.11
+      run: uv python install 3.11
       
     - name: Install dependencies
       run: uv sync --dev
@@ -96,6 +99,9 @@ jobs:
       
     - name: Set up UV
       uses: astral-sh/setup-uv@v3
+      
+    - name: Set up Python 3.11
+      run: uv python install 3.11
       
     - name: Install dependencies
       run: uv sync --dev
@@ -122,6 +128,12 @@ jobs:
       
     - name: Set up UV
       uses: astral-sh/setup-uv@v3
+      
+    - name: Set up Python 3.11
+      run: uv python install 3.11
+      
+    - name: Create virtual environment
+      run: uv venv --python 3.11
       
     - name: Install build dependencies
       run: uv sync --dev
@@ -151,6 +163,9 @@ jobs:
       
     - name: Set up UV
       uses: astral-sh/setup-uv@v3
+      
+    - name: Set up Python 3.11
+      run: uv python install 3.11
       
     - name: Benchmark environment creation
       run: |
@@ -203,6 +218,9 @@ jobs:
       
     - name: Set up UV
       uses: astral-sh/setup-uv@v3
+      
+    - name: Set up Python 3.11
+      run: uv python install 3.11
       
     - name: Install dependencies
       run: uv sync --all-extras --dev
